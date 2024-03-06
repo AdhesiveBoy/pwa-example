@@ -37,21 +37,36 @@ function App() {
         }
 
     }
-    function Start(){
+    async function Start(){
+        let currentCoins = coins.toString();
         if(!loadedIn)
-            LoadCoins();
-
-        if(coins > 0)
         {
-            setCoins(coins - 10);
+            await fetch("../src/coins.json")
+                .then((res) => {return res.json()})
+                .then((json) => {
+                    let file = JSON.parse(JSON.stringify(json));
+                    console.log("coins value = " + file.coins);
+                    setLoadedIn(true);
+                    currentCoins = file.coins;
+                })
+                .catch((e) => console.error(e));
+        }
+        console.log(currentCoins);
+
+        if(currentCoins > 0)
+        {
+            UploadCoins(currentCoins - 10);
         }
         else
-            setCoins(50);
+            UploadCoins(50);
         setPlaying(true);
         var newTotal = DrawCard();
         newTotal += DrawCard();
         setPlayerTotal(newTotal);
         setDealerCards(0);
+    }
+    function Starting(){
+
     }
 
     function DrawCard(){
@@ -80,19 +95,21 @@ function App() {
         }
     }
 
-    function LoadCoins(){
-        fs.readFile('./Index.html', function read(err, data) {
-            if (err) {
-                throw err;
-            }
-            const content = data;
-
-            // Invoke the next step here however you like
-            console.log(content);   // Put all of the code here (not the best solution)
-            processFile(content);   // Or put the next step in a function and invoke it
-        });
+    async function LoadCoins(){
+        await fetch("../src/coins.json")
+            .then((res) => {return res.json()})
+            .then((json) => {
+                let file = JSON.parse(JSON.stringify(json));
+                console.log("coins value = " + file.coins);
+                setLoadedIn(true);
+                let coin = file.coins;
+                return coin;
+            })
+            .catch((e) => console.error(e));
     }
-
+    function UploadCoins(coins){
+        setCoins(coins);
+    }
 }
 
 export default App;

@@ -1,5 +1,5 @@
 const CACHE_NAME = "static-cache";
-const urlsToCache = [ "./index.html", "/favicon.ico", "../src/", "../src/App.jsx", "../src/main.jsx", "../src/index.css","/manifest.json", "../@vite/client", "./@react-refresh"
+const urlsToCache = [ "./index.html", "/favicon.ico", "../src/", "../src/App.jsx", "../src/main.jsx", "../src/index.css","/manifest.json", "../@vite/client", "../src/coins.json", "./@react-refresh"
 ,"./node_modules/vite/dist/client/env.mjs","/logo192.png"];
 
 self.addEventListener("install", (event) => {
@@ -24,12 +24,14 @@ self.addEventListener("fetch", (event) => {
 
             // if not found in cache, return default offline content (only if this is a navigation request)
             if (event.request.mode === 'navigate') {
+                if(event.request.mode === 'online'){
+                    return fetch(event.request);
+                }
                 return caches.match('./index.html');
-                return response;
             }
-
-
-            return fetch(event.request);
+            else {
+                return fetch(event.request);
+            }
         })
     );
 });
