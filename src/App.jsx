@@ -1,4 +1,5 @@
 import { useState } from "react";
+import fs from "fs";
 
 function App() {
     const [won,setWon] = useState(false);
@@ -65,9 +66,6 @@ function App() {
         setPlayerTotal(newTotal);
         setDealerCards(0);
     }
-    function Starting(){
-
-    }
 
     function DrawCard(){
         return Math.floor(Math.random() * 10);
@@ -107,7 +105,12 @@ function App() {
             })
             .catch((e) => console.error(e));
     }
-    function UploadCoins(coins){
+    async function UploadCoins(coins){
+        const coinFile = {"coins":coins};
+        let newRaw = JSON.stringify(coinFile);
+        const fs = require('fs');
+        fs.readFile("../src/coins.json");
+        fs.writeFileSync("../src/coins.json", newRaw);
         setCoins(coins);
     }
 }
